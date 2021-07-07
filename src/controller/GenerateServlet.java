@@ -54,5 +54,6 @@ public class GenerateServlet extends HttpServlet {
         ImageIO.write(image,"JPEG",out);
         out.flush();
         out.close();
+        //121313456231
     }
 }

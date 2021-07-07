@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        function changeCode() {
+            var codeImg =document.getElementById("verifyCode");//得到img图片标签
+            codeImg.src="servlet/GenerateServlet?t="+Math.random();//给该标签下的src属性赋值，这里URL追加随机数，使程序每次
+            //每次访问的都是不同的资源路径，防止浏览器缓存导致的验证码数字不变，即产生不同的验证码。
+        }
+    </script>
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+<!--    <script src="js/index.js"></script>-->
+    <title>登录|招聘</title>
+</head>
+
+<body>
+    <div id="container">
+        <div id="head">
+            <div id="banner"><img src="images/banner2.jpg" id="handpick" alt="banner"></div>
+            <div id="menu">
+                <ul>
+                    <li>主页</li>
+                    <li>职位</li>
+                    <li>产品和服务</li>
+                    <li>校园招聘</li>
+                    <li>|</li>
+                    <li id="li1" onclick="fun1()">注册</li>
+                    <li>登录</li>
+                </ul>
+            </div>
+        </div>
+        <div id="body">
+            <div id="content">
+                <div id="contentLeft">
+                </div>
+                <div id="contentCenter">
+                    <form  action="servlet/LoginServlet" method="get">
+                    <span id="span2">账号登录 </span>
+<!--                    <span id="span1">手机号登录 </span>-->
+                    <p>
+                        <input class="input" type="text" id="username" placeholder="用户名/手机号/邮箱" onblur="send()"/>
+                        <p id="username_info" style="color: red"></p>
+                    </p>
+                    <p>
+                        <input class="input" type="password" id="password" placeholder="密码" onblur="send()" />
+                        <p id="password_info" style="color: red"></p>
+                    </p>
+                     <p id="check">
+                         <input type="text" id="vCode" placeholder="验证码" onblur="send()">
+                         <img src="servlet/GenerateServlet" onclick="changeCode()" id="verifyCode"
+                              title="看不清,换一张" />
+                        <p id="vcode_info" style="color: red"></p>
+                     </p>
+                    <p>
+                         <input class="input" type="button" id="submit" value="登录">
+                    </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+      var xmlHttpRequest;//定义一个ajax全局变量
+      function createXMLHttp(){
+          if(window.XMLHttpRequest){
+              xmlHttpRequest=new XMLHttpRequest();
+          }
+          else
+          {
+              xmlHttpRequest=new ActiveXObject("Microsoft.XMLHTTP")
+          }
+      }
+     function send() {
+         createXMLHttp();
+         xmlHttpRequest.onreadystatechange=echo;
+         var userName=document.getElementById("username").value;
+         console.log(userName);
+         var password=document.getElementById("password").value;
+         var vCode=document.getElementById("vCode").value;
+         console.log(vCode);
+         var url="servlet/CheckLogin?username="+userName+"&password="+password+"&vCode="+vCode;
+         xmlHttpRequest.open("get",url);
+         xmlHttpRequest.send();
+     }
+     function echo() {
+             if(xmlHttpRequest.readyState === 4
+                 && xmlHttpRequest.status === 200){
+                 if(XMLHttpRequest.responseText!=null) {
+                     var ck=new Array(XMLHttpRequest.responseText.split(","));
+                 }
+                 var code_info=ck[0];
+                 var user_info=ck[1];
+                 var pass_info=ck[2];
+                 console.log(code_info);
+                 if(code_info=="1"){
+                     document.getElementById("vcode_info").innerText="验证码正确";
+                 }else {
+                     document.getElementById("vcode_info").innerText="验证码错误，请重新输入";
+                 }
+                 if(user_info=="0"){
+                     document.getElementsByName("username_info").innerText="用户名不存在";
+                 }else if(user_info=="1"){
+                     document.getElementsByName("username_info").innerText="用户名正确";
+                 }
+
+                 if(pass_info=="0"){
+                     document.getElementsByName("password_info").innerText="密码错误";
+                 }else if(pass_info=="1"){
+                     document.getElementsByName("password_info").innerText="密码正确";
+                 }
+             }
+         }
+
+
+
+</script>
+
+</body>
+
+</html>

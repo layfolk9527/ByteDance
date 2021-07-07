@@ -48,7 +48,7 @@ public class GenerateServlet extends HttpServlet {
 //        response.setHeader("Pragma","No-cache");
 //        response.setHeader("Cache-Control","no-cache");
         //设置验证码失效时间 那么(Expires,0)是多少时间？？？
-        response.setDateHeader("Expires",0);
+          response.setDateHeader("Expires",0);
         BufferedImage image = generateImage.createImg(vCode);
         ServletOutputStream out = response.getOutputStream();
         ImageIO.write(image,"JPEG",out);
